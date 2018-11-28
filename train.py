@@ -95,7 +95,7 @@ def train(max_iter, batch_size=16, log_dir=None, aggre = None):
 	
 	for t in range(max_iter):
 		batch_obs, batch_states, batch_actions = next(train_dataloader_iterator)
-		batch_obs = gpu((batch_obs.float().permute(0,1,4,3,2))
+		batch_obs = gpu(batch_obs.float().permute(0,1,4,3,2))
 		#batch_states = gpu(batch_states.float().permute(0,2,1))
 		batch_actions = gpu(batch_actions)
 		
