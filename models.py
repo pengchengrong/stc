@@ -91,24 +91,18 @@ class Model(nn.Module):
 			nn.ReLU(True),
 			nn.Linear(64,32),
 		)
-
-		self.fc2 = nn.Sequential(
-			nn.Linear(40,6)
-		)
 		
-		'''
 		self.t_cnn = nn.Sequential(
-			nn.Conv1d(40,16,5),
+			nn.Conv1d(40,16,3),
 			nn.ReLU(True),
-			nn.Conv1d(16,16,5),
+			nn.Conv1d(16,16,3),
 			nn.ReLU(True),
-			nn.Conv1d(16,16,5),
+			nn.Conv1d(16,16,3),
 			nn.ReLU(True),
-			nn.Conv1d(16,6,5),
+			nn.Conv1d(16,6,3),
 		)
-		'''
 		
-		self.width = 4*(5-1)
+		self.width = 4*(3-1)
 
 	def forward(self, hist, state):
 		'''
@@ -122,15 +116,11 @@ class Model(nn.Module):
 		h = self.conv(hist).view(-1, self.conv_out)
 		h = self.fc(h).view(b,s,32)
 		h = torch.cat((h, state), dim = 2)
-		actions = self.fc2(h)
-		return actions
-		'''
 		h = h.permute(0,2,1)
 		h = F.pad(h, (self.width,0))
 		actions = self.t_cnn(h)
 		actions = actions.permute(0,2,1)
 		return actions
-		'''
 
 	def policy(self):
 		return Policy(self)
