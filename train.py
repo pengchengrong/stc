@@ -44,7 +44,7 @@ def hack_loss(states, labels):
 	return torch.tensor(total_loss / states.numel())
 '''
 
-def train(max_iter, batch_size=16, log_dir=None, aggre = None):
+def train(max_iter, batch_size=10, log_dir=None, aggre = None):
 	'''
 	This is the main training function, feel free to modify some of the code, but it
 	should not be required to complete the assignment.
