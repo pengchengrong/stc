@@ -115,7 +115,6 @@ class Model(nn.Module):
 		#actions = actions.permute(0,2,1)
 		actions = self.fc2(h)
 		actions = actions.view(b,s,-1)
-		print(actions.size())
 		return actions
 
 	def policy(self):
