@@ -152,7 +152,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 			batch_states = gpu(batch_states.float())
 			batch_actions = gpu(batch_actions.float())
 			
-			model_outputs = model(batch_obs)
+			model_outputs = model(batch_obs, batch_states)
 			
 			v_loss_val = loss(model_outputs, batch_actions)
 
