@@ -123,8 +123,8 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 	for t in range(max_iter):
 		batch_obs, batch_states, batch_actions = next(train_dataloader_iterator)
 		batch_obs = gpu(batch_obs.float().permute(0,1,4,3,2))
-		batch_states = gpu(batch_states)
-		batch_actions = gpu(batch_actions)
+		batch_states = gpu(batch_states.float())
+		batch_actions = gpu(batch_actions.float())
 		
 		model.train()
 		
@@ -149,8 +149,8 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 		if t % 10 == 0 and t > 0:	
 			batch_obs, batch_states, batch_actions = next(valid_dataloader_iterator)
 			batch_obs = gpu(batch_obs.float().permute(0,1,4,2,3))
-			batch_states = gpu(batch_states)
-			batch_actions = gpu(batch_actions)
+			batch_states = gpu(batch_states.float())
+			batch_actions = gpu(batch_actions.float())
 			
 			model_outputs = model(batch_obs)
 			

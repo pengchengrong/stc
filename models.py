@@ -61,12 +61,6 @@ class Policy:
 		return self.model(x, y)[0,-1,:]
 
 class Model(nn.Module):
-	def pre_process_state(self, state):
-		print(state[0])
-		state = state[:, 1:7]
-		speed_std = torch.std(state[:, 0])
-		state[:, 0] /= speed_std
-		return state
 
 	def __init__(self):
 		super().__init__()
@@ -112,7 +106,6 @@ class Model(nn.Module):
 		b,s,c,h,w = hist.size()
 		hist = hist.view(b*s,c,h,w)
 		state = state.view(b*s,-1)
-		state = self.pre_process_state(state)
 		h = self.conv(hist).view(-1, self.conv_out)
 		h = self.fc(h)
 		h = torch.cat((h, state), dim = 1)
