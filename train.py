@@ -154,7 +154,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 			
 			model_outputs = model(batch_obs, batch_states)
 			
-			v_loss_val = loss(model_outputs, batch_actions)
+			v_loss_val = weighted_loss(model_outputs, batch_actions)
 
 			print('[%5d]  t_loss = %f   v_loss = %f'%(t, t_loss_val,v_loss_val))
 			if log is not None:
