@@ -24,7 +24,7 @@ def gpu(obj):
 		return obj.cuda()
 	else:
 		return obj
-iterations_per_period = 300
+iterations_per_period = 250
 calling_frequency = 10
 prev_period_accuracy = 1
 total_accuracy = .0
