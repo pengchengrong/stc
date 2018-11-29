@@ -53,8 +53,7 @@ class ActionDataset(Dataset):
 		
 		imgs, states, actions = self._cache[idx]
 		
-		if self.crop is not None:
-			print("len(imgs)=", len(imgs), ", self.crop=", self.crop)
+		if self.crop is not None and len(imgs) > self.crop:
 			s = np.random.choice(len(imgs) - self.crop + 1)
 			imgs = imgs[s:s+self.crop]
 			states = states[s:s+self.crop]
