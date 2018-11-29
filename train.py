@@ -114,7 +114,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 	optimizer = optim.Adam(model.parameters(), lr = learning_rate, weight_decay=1e-4)
 	
 	train_class_loss_weights = np.array([
-		1., 15., 15., 1., 10., 10.
+		1., 10., 10., 1., 6., 6.
 	])
 	# Loss criterion. Your need to replace this with one that considers class imbalance
 	weighted_loss = nn.BCEWithLogitsLoss(pos_weight=gpu(torch.from_numpy(train_class_loss_weights).float()))
