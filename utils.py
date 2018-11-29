@@ -12,7 +12,7 @@ class ActionDataset(Dataset):
 	def pre_process_img(self, imgs):
 		#std= tensor([53.4321, 53.9151, 64.8187])
 		#mean= tensor([61.5095, 56.4507, 57.6815])
-		shape = imgs.shape
+		return imgs
 		imgs[:, :, :, 0] = (imgs[:, :, :, 0] - 61.5095) / 53.4321
 		imgs[:, :, :, 1] = (imgs[:, :, :, 1] - 56.4507) / 53.9151
 		imgs[:, :, :, 2] = (imgs[:, :, :, 2] - 57.6815) / 64.8187
