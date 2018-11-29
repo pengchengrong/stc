@@ -137,7 +137,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 		#hloss = hack_loss(batch_states, batch_actions)
 
 		# Compute the loss
-		t_loss_val = loss(model_outputs, batch_actions.float())# + hloss
+		t_loss_val = weighted_loss(model_outputs, batch_actions.float())
 		
 		# Compute the gradient
 		t_loss_val.backward()
