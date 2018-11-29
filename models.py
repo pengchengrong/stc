@@ -61,6 +61,13 @@ class Policy:
 		return self.model(x, y)[0,-1,:]
 
 class Model(nn.Module):
+	def pre_process_state(self, state):
+		print(state[0])
+		state = state[:, 1:7]
+		speed_std = torch.std(state[:, 0])
+		state[:, 0] /= speed_std
+		return state
+
 	def __init__(self):
 		super().__init__()
 		
@@ -87,22 +94,13 @@ class Model(nn.Module):
 		self.conv_out = 128*4*3 #768
 		
 		self.fc = nn.Sequential(
-			nn.Linear(self.conv_out,64),
+			nn.Linear(self.conv_out,58),
 			nn.ReLU(True),
-			nn.Linear(64,32),
 		)
 		
-		self.t_cnn = nn.Sequential(
-			nn.Conv1d(40,16,3),
-			nn.ReLU(True),
-			nn.Conv1d(16,16,3),
-			nn.ReLU(True),
-			nn.Conv1d(16,16,3),
-			nn.ReLU(True),
-			nn.Conv1d(16,6,3),
+		self.fc2 = nn.Sequential(
+			nn.Linear(64,6),
 		)
-		
-		self.width = 4*(3-1)
 
 	def forward(self, hist, state):
 		'''
@@ -113,13 +111,18 @@ class Model(nn.Module):
 
 		b,s,c,h,w = hist.size()
 		hist = hist.view(b*s,c,h,w)
+		state = state.view(b*s,-1)
+		state = self.pre_process_state(state)
 		h = self.conv(hist).view(-1, self.conv_out)
-		h = self.fc(h).view(b,s,32)
-		h = torch.cat((h, state), dim = 2)
-		h = h.permute(0,2,1)
-		h = F.pad(h, (self.width,0))
-		actions = self.t_cnn(h)
-		actions = actions.permute(0,2,1)
+		h = self.fc(h)
+		h = torch.cat((h, state), dim = 1)
+		#h = h.permute(0,2,1)
+		#h = F.pad(h, (self.width,0))
+		#actions = self.t_cnn(h)
+		#actions = actions.permute(0,2,1)
+		actions = self.fc2(h)
+		actions = actions.view(b,s,-1)
+		print(actions.size())
 		return actions
 
 	def policy(self):
