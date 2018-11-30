@@ -8,7 +8,7 @@ import torch
 
 from torch.utils.data import DataLoader, Dataset
 
-def pre_process_state(self, state):
+def pre_process_state(state):
 	#statistics of the state array
 	#std= tensor([3.3618, 1.4174, 3.3497, 0.0138, 0.8749, 0.7345, 2.8847, 0.9911])
 	#mean= tensor([ 1.4567e+01,  2.5204e+00,  1.4577e+01,  7.4328e-04,  1.4897e+00,-2.8953e-02, -5.4145e-02,  1.8194e+00])
