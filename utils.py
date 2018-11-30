@@ -35,7 +35,6 @@ class ActionDataset(Dataset):
 		
 	def __getitem__(self, idx):
 		if idx not in self._cache:
-			print(idx)
 			imgs = np.load(os.path.join(self.data_dir, '%04d_img.npy'%idx))
 			actions = np.load(os.path.join(self.data_dir, '%04d_action.npy'%idx)).astype(np.uint8)
 			states = np.load(os.path.join(self.data_dir, '%04d_state.npy'%idx))
