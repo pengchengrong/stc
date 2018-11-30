@@ -2,6 +2,7 @@ from torch import nn
 import torch.nn.functional as F
 import torch
 import numpy as np
+from utils import *
 
 class ResBlock(nn.Module):
 	def __init__(self, in_channel, out_channel, stride, k=5, pad=2):
@@ -50,11 +51,16 @@ class Policy:
 		self.hist_state = []
 		
 	def __call__(self, obs, state):
+
+		state = state[1:7]
+		state = (state - torch.tensor([2.5204e+00,  1.4577e+01,  0,  1.4897e+00, 0, 0])) / torch.tensor([1.4174, 3.3497, 1, 0.8749, 0.7345, 2.8847])
+	
+
 		self.hist.append(obs)
 		self.hist_state.append(state)
-		if len(self.hist) > self.model.width:
-			self.hist = self.hist[-self.model.width:]
-			self.hist_state = self.hist_state[-self.model.width:]
+		if len(self.hist) > 1:
+			self.hist = self.hist[-1:]
+			self.hist_state = self.hist_state[-1:]
 		x = torch.stack(self.hist, dim=0)[None]
 		y = torch.stack(self.hist_state, dim=0)[None]
 		#print(x.size(), ", ", y.size(), ", ", self.model(x, y), ", ", self.model(x, y)[0,-1,:])

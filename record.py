@@ -15,6 +15,7 @@ from random import random
 from pynput import keyboard
 from models import *
 from pylab import *
+from utils import *
 
 # Make sure we can record
 try:
@@ -39,6 +40,9 @@ if os.path.exists(trainning_model):
 	model.load_state_dict(torch.load(trainning_model))
 	print("Pre-trained model loaded.")
 model.eval()
+learning_rate = 1e-4
+optimizer = optim.Adam(model.parameters(), lr = learning_rate, weight_decay=1e-4)
+loss = nn.BCEWithLogitsLoss()
 print ("Num of parameters: ", sum([p.numel() for p in model.parameters() if p.requires_grad]))
 
 def on_press(key):
@@ -103,7 +107,40 @@ def extract_state(state):
 	return s
 
 def savedata(data, states, label):
-	if data.size()[0] < 40:
+	'''
+	if data_aggregation == True:
+
+		data = data.view(1, data.size()[0], data.size()[1], data.size()[2], data.size()[3]).permute(0,1,4,3,2)
+		states = states[:, 1:7]
+		states = (states - torch.tensor([2.5204e+00,  1.4577e+01,  0,  1.4897e+00, 0, 0])) / torch.tensor([1.4174, 3.3497, 1, 0.8749, 0.7345, 2.8847])
+		states = states.view(1, states.size()[0], states.size()[1])
+		
+		label = label.view(1, label.size()[0], label.size()[1])
+		#print(data.shape, ", ", states.shape, ", ", label.shape)
+
+		model.train()
+		
+		# zero the gradients (part of pytorch backprop)
+		optimizer.zero_grad()
+		
+		# Compute the model output and loss (view flattens the input)
+		model_outputs = model(data, states)
+
+		# Compute the loss
+		t_loss_val = loss(model_outputs, label.float())
+		
+		# Compute the gradient
+		t_loss_val.backward()
+	
+		# Update the weights
+		optimizer.step()
+
+		print("Training loss = ", t_loss_val)
+
+		return
+	'''
+
+	if data.size()[0] < 10:
 		return
 
 	global recording_index,recorded_files
@@ -239,13 +276,11 @@ while not terminated:
 			label = None
 			states = None
 
-		if data_aggregation == True:
-			#Train with newly collected data
-			aggre = []
-			for i in range (recorded_files):
-				aggre.append(format(recording_index - i, '04d')+'_img.npy')
-			train(1, subset = aggre)
-
 torch.save(model.state_dict(), os.path.join(dirname, 'model.th')) 
+
+'''
+if data_aggregation == True:
+	torch.save(model.state_dict(), os.path.join(dirname, 'model.da.th'))
+'''
 quit()
 	

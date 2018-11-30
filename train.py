@@ -20,7 +20,7 @@ def cycle(seq):
 
 
 def gpu(obj):
-	if torch.cuda.is_available():
+	if torch.cuda.is_available() and False:
 		return obj.cuda()
 	else:
 		return obj
