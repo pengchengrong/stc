@@ -156,7 +156,7 @@ def savedata(data, states, label):
 	recorded_files += 1
 	fname = format(recording_index , '04d')	
 
-	np.save(os.path.join('train/', fname + "_img.npy"), data.numpy())
+	np.save(os.path.join('train/', fname + "_img.npy"), data.byte().numpy())
 	np.save(os.path.join('train/', fname + "_state.npy"), states.numpy())
 	np.save(os.path.join('train/', fname + "_action.npy"), label.numpy())
 
