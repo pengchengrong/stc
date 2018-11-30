@@ -34,6 +34,7 @@ class ActionDataset(Dataset):
 		return len(self.trajs)//3
 		
 	def __getitem__(self, idx):
+		idx += 23
 		if idx not in self._cache:
 			imgs = np.load(os.path.join(self.data_dir, '%04d_img.npy'%idx))
 			actions = np.load(os.path.join(self.data_dir, '%04d_action.npy'%idx)).astype(np.uint8)
