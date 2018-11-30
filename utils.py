@@ -52,7 +52,6 @@ class ActionDataset(Dataset):
 
 		#imgs = (imgs - [74.26,69.21,61.61]) / [5.58,5.24,4.83]
 
-		self._cache.clear()
 		return imgs, states, actions
 		
 		
