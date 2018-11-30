@@ -5,6 +5,7 @@ Module that contains that some utility functions
 import os
 import numpy as np
 import torch
+import glob
 
 from torch.utils.data import DataLoader, Dataset
 
@@ -22,10 +23,9 @@ class ActionDataset(Dataset):
 		self.data_dir = data_dir
 		self.crop = crop
 		
-		if subset is None:
-			self.trajs = os.listdir(data_dir)
-		else:
-			self.trajs = [fn for fn in os.listdir(data_dir) if fn in subset]
+		self.trajs = sorted(glob.glob(data_dir + "/*_img.npy"), key=os.path.getmtime) #os.listdir(data_dir)
+		if subset is not None:
+			self.trajs = self.trajs[-1*subset:]
 		
 		self._cache = {}
 		
@@ -35,9 +35,12 @@ class ActionDataset(Dataset):
 		
 	def __getitem__(self, idx):
 		if idx not in self._cache:
-			imgs = np.load(os.path.join(self.data_dir, '%04d_img.npy'%idx))
-			actions = np.load(os.path.join(self.data_dir, '%04d_action.npy'%idx)).astype(np.uint8)
-			states = np.load(os.path.join(self.data_dir, '%04d_state.npy'%idx))
+			img_file = self.trajs[idx]
+			action_file = img_file.replace("_img.", "_action.")
+			state_file = img_file.replace("_img.", "_state.")
+			imgs = np.load(img_file).astype(np.uint8)
+			actions = np.load(action_file).astype(np.uint8)
+			states = np.load(state_file)
 			states = pre_process_state(states)
 			
 			self._cache[idx] = (imgs, states, actions)
