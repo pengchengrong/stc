@@ -8,16 +8,6 @@ import torch
 
 from torch.utils.data import DataLoader, Dataset
 
-def pre_process_img(self, imgs):
-	#std= tensor([53.4321, 53.9151, 64.8187])
-	#mean= tensor([61.5095, 56.4507, 57.6815])
-	return imgs
-	#normalizing pixel data doesn't seem to work
-	imgs[:, :, :, 0] = (imgs[:, :, :, 0] - 61.5095) / 53.4321
-	imgs[:, :, :, 1] = (imgs[:, :, :, 1] - 56.4507) / 53.9151
-	imgs[:, :, :, 2] = (imgs[:, :, :, 2] - 57.6815) / 64.8187
-	return imgs
-
 def pre_process_state(self, state):
 	#statistics of the state array
 	#std= tensor([3.3618, 1.4174, 3.3497, 0.0138, 0.8749, 0.7345, 2.8847, 0.9911])
@@ -49,7 +39,6 @@ class ActionDataset(Dataset):
 			imgs = np.load(os.path.join(self.data_dir, '%04d_img.npy'%idx))
 			actions = np.load(os.path.join(self.data_dir, '%04d_action.npy'%idx)).astype(np.uint8)
 			states = np.load(os.path.join(self.data_dir, '%04d_state.npy'%idx))
-			imgs = pre_process_img(imgs)
 			states = pre_process_state(states)
 			
 			self._cache[idx] = (imgs, states, actions)
