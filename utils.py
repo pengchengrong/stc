@@ -8,23 +8,25 @@ import torch
 
 from torch.utils.data import DataLoader, Dataset
 
-class ActionDataset(Dataset):
-	def pre_process_img(self, imgs):
-		#std= tensor([53.4321, 53.9151, 64.8187])
-		#mean= tensor([61.5095, 56.4507, 57.6815])
-		return imgs
-		imgs[:, :, :, 0] = (imgs[:, :, :, 0] - 61.5095) / 53.4321
-		imgs[:, :, :, 1] = (imgs[:, :, :, 1] - 56.4507) / 53.9151
-		imgs[:, :, :, 2] = (imgs[:, :, :, 2] - 57.6815) / 64.8187
-		return imgs
+def pre_process_img(self, imgs):
+	#std= tensor([53.4321, 53.9151, 64.8187])
+	#mean= tensor([61.5095, 56.4507, 57.6815])
+	return imgs
+	#normalizing pixel data doesn't seem to work
+	imgs[:, :, :, 0] = (imgs[:, :, :, 0] - 61.5095) / 53.4321
+	imgs[:, :, :, 1] = (imgs[:, :, :, 1] - 56.4507) / 53.9151
+	imgs[:, :, :, 2] = (imgs[:, :, :, 2] - 57.6815) / 64.8187
+	return imgs
 
-	def pre_process_state(self, state):
-		#statistics of the state array
-		#std= tensor([3.3618, 1.4174, 3.3497, 0.0138, 0.8749, 0.7345, 2.8847, 0.9911])
-		#mean= tensor([ 1.4567e+01,  2.5204e+00,  1.4577e+01,  7.4328e-04,  1.4897e+00,-2.8953e-02, -5.4145e-02,  1.8194e+00])
-		state = state[:, 1:7]
-		state = (state - [2.5204e+00,  1.4577e+01,  0,  1.4897e+00, 0, 0]) / [1.4174, 3.3497, 1, 0.8749, 0.7345, 2.8847]
-		return state
+def pre_process_state(self, state):
+	#statistics of the state array
+	#std= tensor([3.3618, 1.4174, 3.3497, 0.0138, 0.8749, 0.7345, 2.8847, 0.9911])
+	#mean= tensor([ 1.4567e+01,  2.5204e+00,  1.4577e+01,  7.4328e-04,  1.4897e+00,-2.8953e-02, -5.4145e-02,  1.8194e+00])
+	state = state[:, 1:7]
+	state = (state - [2.5204e+00,  1.4577e+01,  0,  1.4897e+00, 0, 0]) / [1.4174, 3.3497, 1, 0.8749, 0.7345, 2.8847]
+	return state
+
+class ActionDataset(Dataset):
 
 	def __init__(self, data_dir, crop=None, subset = None):
 		self.data_dir = data_dir
@@ -43,11 +45,12 @@ class ActionDataset(Dataset):
 		
 	def __getitem__(self, idx):
 		if idx not in self._cache:
+			print(idx)
 			imgs = np.load(os.path.join(self.data_dir, '%04d_img.npy'%idx))
 			actions = np.load(os.path.join(self.data_dir, '%04d_action.npy'%idx)).astype(np.uint8)
 			states = np.load(os.path.join(self.data_dir, '%04d_state.npy'%idx))
-			imgs = self.pre_process_img(imgs)
-			states = self.pre_process_state(states)
+			imgs = pre_process_img(imgs)
+			states = pre_process_state(states)
 			
 			self._cache[idx] = (imgs, states, actions)
 		
