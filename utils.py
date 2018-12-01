@@ -56,9 +56,7 @@ class ActionDataset(Dataset):
 		states = np.load(state_file)
 		#imgs = pre_process_img(imgs)
 		states = pre_process_state(states)			
-		
-		imgs, states, actions = self._cache[idx]
-		
+				
 		if self.crop is not None and len(imgs) > self.crop:
 			s = np.random.choice(len(imgs) - self.crop + 1)
 			imgs = imgs[s:s+self.crop]
