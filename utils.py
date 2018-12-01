@@ -31,7 +31,7 @@ class ActionDataset(Dataset):
 		
 	
 	def __len__(self):
-		return len(self.trajs)//3
+		return len(self.trajs)
 		
 	def __getitem__(self, idx):
 		if idx not in self._cache:
@@ -39,7 +39,7 @@ class ActionDataset(Dataset):
 			action_file = img_file.replace("_img.", "_action.")
 			state_file = img_file.replace("_img.", "_state.")
 			#imgs = np.load(img_file).astype(np.uint8)
-			imgs = np.load(img_file).astype(np.int32)
+			imgs = np.load(img_file) / 255.
 			actions = np.load(action_file).astype(np.uint8)
 			states = np.load(state_file)
 			states = pre_process_state(states)
