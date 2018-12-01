@@ -158,7 +158,7 @@ def train(max_iter, batch_size=8, log_dir=None, aggre = None):
 
 			if t % 100 == 0 and t > 0:
 				print("Prediction:")
-				print (model_outputs[:, 0:10, :, :])
+				print (predicted_actions[:, 0:10, :])
 				print("Labels:")
 				print (batch_actions[:, 0:10])
 
