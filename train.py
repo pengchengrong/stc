@@ -152,8 +152,15 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 			batch_actions = gpu(batch_actions.float())
 			
 			model_outputs = model(batch_obs, batch_states)
-			
-			v_loss_val = loss(sig(model_outputs), batch_actions)
+			predicted_actions = sig(model_outputs)
+
+			v_loss_val = loss(predicted_actions, batch_actions)
+
+			if t % 100 == 0 and t > 0:
+				print("Prediction:")
+				print (model_outputs[:, 0:10, :, :]
+				print("Labels:")
+				print (batch_actions[:, 0:10])
 
 			print('[%5d]  t_loss = %f   v_loss = %f'%(t, t_loss_val,v_loss_val))
 			if log is not None:
