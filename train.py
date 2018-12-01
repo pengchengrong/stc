@@ -83,7 +83,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 	if aggre is not None:
 		train_dataloader = load('train', num_workers=0, batch_size=batch_size, subset = aggre)
 	else:
-		train_dataloader = load('train', num_workers=0, crop=128, batch_size=batch_size)
+		train_dataloader = load('train', num_workers=0, batch_size=batch_size)
 	valid_dataloader = load('val', num_workers=0, crop=64, batch_size=batch_size)
 
 	train_dataloader_iterator = cycle(train_dataloader)
