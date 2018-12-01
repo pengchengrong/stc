@@ -16,7 +16,10 @@ from pynput import keyboard
 from models import *
 from pylab import *
 from utils import *
+import pwd
 
+def get_username():
+    return pwd.getpwuid( os.getuid() )[ 0 ]
 # Make sure we can record
 try:
 	os.mkdir('train')
@@ -110,18 +113,20 @@ def savedata(data, states, label):
 	if data.size()[0] < 10:
 		return
 
+	uname = get_username()
 	global recording_index,recorded_files
 	if recording_index < 0:
 		try:
-			LatestFile = max(glob.iglob('train/*_img.npy'), key=os.path.getctime)
-			recording_index = int(LatestFile[6:10])
+			LatestFile = max(glob.iglob('train/' + uname+ '_*_img.npy'), key=os.path.getctime)
+			_ = LatestFile.find("_") + 1
+			recording_index = int(LatestFile[_:_+4])
 		except Exception as e:
 			recording_index = -1
 		
 	
 	recording_index += 1
 	recorded_files += 1
-	fname = format(recording_index , '04d')	
+	fname = uname + '_' + format(recording_index , '04d')	
 
 	np.save(os.path.join('train/', fname + "_img.npy"), data.byte().numpy())
 	np.save(os.path.join('train/', fname + "_state.npy"), states.numpy())

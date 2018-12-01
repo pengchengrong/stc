@@ -53,9 +53,9 @@ class Policy:
 	def __call__(self, obs, state):
 
 		# c, w, h
-		obs = obs[0, :, :] = (obs[0, :, :] - img_mean[0]) / img_std[0]
-		obs = obs[1, :, :] = (obs[1, :, :] - img_mean[1]) / img_std[1]
-		obs = obs[2, :, :] = (obs[2, :, :] - img_mean[2]) / img_std[2]
+		obs[0, :, :] = (obs[0, :, :] - img_mean[0]) / img_std[0]
+		obs[1, :, :] = (obs[1, :, :] - img_mean[1]) / img_std[1]
+		obs[2, :, :] = (obs[2, :, :] - img_mean[2]) / img_std[2]
 
 		state = state[1:7]
 		state = (state - torch.tensor(state_mean)) / torch.tensor(state_std)
