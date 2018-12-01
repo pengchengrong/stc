@@ -71,7 +71,7 @@ def auto_early_stopping(iteration, accuracy, model):
 	total_accuracy = total_accuracy + accuracy
 	return False, accuracy_plateaued, None
 
-def train(max_iter, batch_size=8, log_dir=None, aggre = None):
+def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 	'''
 	This is the main training function, feel free to modify some of the code, but it
 	should not be required to complete the assignment.
@@ -81,10 +81,10 @@ def train(max_iter, batch_size=8, log_dir=None, aggre = None):
 	Load the training data
 	"""
 	if aggre is not None:
-		train_dataloader = load('train', num_workers=0, batch_size=batch_size, crop=40, subset = aggre)
+		train_dataloader = load('train', num_workers=0, batch_size=batch_size, subset = aggre)
 	else:
-		train_dataloader = load('train', num_workers=0, crop=40, batch_size=batch_size)
-	valid_dataloader = load('val', num_workers=0, crop=10, batch_size=batch_size)
+		train_dataloader = load('train', num_workers=0, batch_size=batch_size)
+	valid_dataloader = load('val', num_workers=0, crop=64, batch_size=batch_size)
 
 	train_dataloader_iterator = cycle(train_dataloader)
 	valid_dataloader_iterator = cycle(valid_dataloader)
@@ -157,6 +157,7 @@ def train(max_iter, batch_size=8, log_dir=None, aggre = None):
 			v_loss_val = loss(predicted_actions, batch_actions)
 
 			if t % 100 == 0 and t > 0:
+				torch.set_printoptions(precision=2)
 				print("Prediction:")
 				print (predicted_actions[:, 0:10, :])
 				print("Labels:")
