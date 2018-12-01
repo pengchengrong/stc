@@ -46,6 +46,31 @@ class ActionDataset(Dataset):
 		return len(self.trajs)
 		
 	def __getitem__(self, idx):
+
+		img_file = self.trajs[idx]
+		action_file = img_file.replace("_img.", "_action.")
+		state_file = img_file.replace("_img.", "_state.")
+		#imgs = np.load(img_file).astype(np.uint8)
+		imgs = np.load(img_file)
+		actions = np.load(action_file).astype(np.uint8)
+		states = np.load(state_file)
+		#imgs = pre_process_img(imgs)
+		states = pre_process_state(states)			
+		
+		imgs, states, actions = self._cache[idx]
+		
+		if self.crop is not None and len(imgs) > self.crop:
+			s = np.random.choice(len(imgs) - self.crop + 1)
+			imgs = imgs[s:s+self.crop]
+			states = states[s:s+self.crop]
+			actions = actions[s:s+self.crop]
+
+		#imgs = (imgs - [74.26,69.21,61.61]) / [5.58,5.24,4.83]
+
+		return imgs, states, actions
+
+
+
 		if idx not in self._cache:
 			img_file = self.trajs[idx]
 			action_file = img_file.replace("_img.", "_action.")
