@@ -9,6 +9,15 @@ import glob
 
 from torch.utils.data import DataLoader, Dataset
 
+def pre_process_img(imgs):
+	#std= tensor([0.2095, 0.2114, 0.2541])
+	#mean= tensor([0.2412, 0.2214, 0.2262])
+	imgs = imgs / 255.
+	imgs[:, :, :, 0] = (imgs[:, :, :, 0] - 0.2412) / 0.2095
+	imgs[:, :, :, 1] = (imgs[:, :, :, 1] - 0.2214) / 0.2114
+	imgs[:, :, :, 2] = (imgs[:, :, :, 2] - 0.2262) / 0.2541
+	return imgs
+
 def pre_process_state(state):
 	#statistics of the state array
 	#std= tensor([3.3618, 1.4174, 3.3497, 0.0138, 0.8749, 0.7345, 2.8847, 0.9911])
@@ -42,6 +51,7 @@ class ActionDataset(Dataset):
 			imgs = np.load(img_file)
 			actions = np.load(action_file).astype(np.uint8)
 			states = np.load(state_file)
+			imgs = pre_process_img(imgs)
 			states = pre_process_state(states)
 			
 			self._cache[idx] = (imgs, states, actions)
