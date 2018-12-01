@@ -54,7 +54,7 @@ class ActionDataset(Dataset):
 			imgs = np.load(img_file)
 			actions = np.load(action_file).astype(np.uint8)
 			states = np.load(state_file)
-			imgs = pre_process_img(imgs)
+			#imgs = pre_process_img(imgs)
 			states = pre_process_state(states)
 			
 			self._cache[idx] = (imgs, states, actions)
