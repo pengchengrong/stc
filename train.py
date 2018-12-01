@@ -175,6 +175,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 				log.add_scalar('train/loss', t_loss_val, t)
 				log.add_scalar('val/loss', v_loss_val, t)
 
+			'''
 			early_stop, accuracy_plateaued, last_good_model = auto_early_stopping(t, v_loss_val, model.state_dict())
 			if (early_stop == True):
 				model.load_state_dict(last_good_model)
@@ -184,6 +185,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 				for param_group in optimizer.param_groups:
 					param_group['lr'] = learning_rate
 				print('learning rate dropped to %f'%learning_rate)
+			'''
 			torch.save(model.state_dict(), trainning_model) 
 
 	torch.save(model.state_dict(), os.path.join(dirname, 'model.th')) # Do NOT modify this line
