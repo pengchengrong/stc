@@ -9,13 +9,16 @@ import glob
 
 from torch.utils.data import DataLoader, Dataset
 
+state_mean = [2.5204e+00,  1.4577e+01,  0,  1.4897e+00, 0, 0]
+state_std = [1.4174, 3.3497, 1, 0.8749, 0.7345, 2.8847]
+img_mean = [0.2412, 0.2214, 0.2262]
+img_std = [0.2095, 0.2114, 0.2541]
+
 def pre_process_img(imgs):
-	#std= tensor([0.2095, 0.2114, 0.2541])
-	#mean= tensor([0.2412, 0.2214, 0.2262])
 	imgs = imgs / 255.
-	imgs[:, :, :, 0] = (imgs[:, :, :, 0] - 0.2412) / 0.2095
-	imgs[:, :, :, 1] = (imgs[:, :, :, 1] - 0.2214) / 0.2114
-	imgs[:, :, :, 2] = (imgs[:, :, :, 2] - 0.2262) / 0.2541
+	imgs[:, :, :, 0] = (imgs[:, :, :, 0] - img_mean[0]) / img_std[0]
+	imgs[:, :, :, 1] = (imgs[:, :, :, 1] - img_mean[1]) / img_std[1]
+	imgs[:, :, :, 2] = (imgs[:, :, :, 2] - img_mean[2]) / img_std[2]
 	return imgs
 
 def pre_process_state(state):
@@ -23,7 +26,7 @@ def pre_process_state(state):
 	#std= tensor([3.3618, 1.4174, 3.3497, 0.0138, 0.8749, 0.7345, 2.8847, 0.9911])
 	#mean= tensor([ 1.4567e+01,  2.5204e+00,  1.4577e+01,  7.4328e-04,  1.4897e+00,-2.8953e-02, -5.4145e-02,  1.8194e+00])
 	state = state[:, 1:7]
-	state = (state - [2.5204e+00,  1.4577e+01,  0,  1.4897e+00, 0, 0]) / [1.4174, 3.3497, 1, 0.8749, 0.7345, 2.8847]
+	state = (state - state_mean) / state_std
 	return state
 
 class ActionDataset(Dataset):
