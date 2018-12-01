@@ -139,6 +139,13 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 		# Compute the loss
 		t_loss_val = loss(predicted_actions, batch_actions)
 		
+		if t % 50 == 0 and t > 0:
+			torch.set_printoptions(precision=2)
+			print("train prediction:")
+			print (predicted_actions[:, 0:5, :])
+			print("train labels:")
+			print (batch_actions[:, 0:5])
+
 		# Compute the gradient
 		t_loss_val.backward()
 	
@@ -156,12 +163,12 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 
 			v_loss_val = loss(predicted_actions, batch_actions)
 
-			if t % 100 == 0 and t > 0:
+			if t % 50 == 0 and t > 0:
 				torch.set_printoptions(precision=2)
-				print("Prediction:")
-				print (predicted_actions[:, 0:10, :])
-				print("Labels:")
-				print (batch_actions[:, 0:10])
+				print("val prediction:")
+				print (predicted_actions[:, 0:5, :])
+				print("val labels:")
+				print (batch_actions[:, 0:5])
 
 			print('[%5d]  t_loss = %f   v_loss = %f'%(t, t_loss_val,v_loss_val))
 			if log is not None:
