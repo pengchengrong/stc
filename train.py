@@ -140,7 +140,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 		t_loss_val = loss(predicted_actions, batch_actions)
 		
 		if t % 50 == 0 and t > 0:
-			torch.set_printoptions(precision=2)
+			torch.set_printoptions(precision=2, suppress = True)
 			print("train prediction:")
 			print (predicted_actions[:, 0:5, :])
 			print("train labels:")
@@ -164,7 +164,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 			v_loss_val = loss(predicted_actions, batch_actions)
 
 			if t % 50 == 0 and t > 0:
-				torch.set_printoptions(precision=2)
+				torch.set_printoptions(precision=2, suppress = True)
 				print("val prediction:")
 				print (predicted_actions[:, 0:5, :])
 				print("val labels:")
