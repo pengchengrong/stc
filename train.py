@@ -117,7 +117,8 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 		1., 10., 10., 1., 3., 3.
 	])
 	# Loss criterion. Your need to replace this with one that considers class imbalance
-	loss = nn.BCEWithLogitsLoss(pos_weight=gpu(torch.from_numpy(train_class_loss_weights).float()))
+	sig = nn.Sigmoid()
+	loss = nn.BCELoss(weight=gpu(torch.from_numpy(train_class_loss_weights).float()))
 	
 	for t in range(max_iter):
 		batch_obs, batch_states, batch_actions = next(train_dataloader_iterator)
@@ -132,9 +133,11 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 		
 		# Compute the model output and loss (view flattens the input)
 		model_outputs = model(batch_obs, batch_states)
+		predicted_actions = sig(model_outputs)
+		#print (predicted_actions[:, 0:10, :] - batch_actions[:, 0:10])
 
 		# Compute the loss
-		t_loss_val = loss(model_outputs, batch_actions)
+		t_loss_val = loss(predicted_actions, batch_actions)
 		
 		# Compute the gradient
 		t_loss_val.backward()
@@ -150,7 +153,7 @@ def train(max_iter, batch_size=1, log_dir=None, aggre = None):
 			
 			model_outputs = model(batch_obs, batch_states)
 			
-			v_loss_val = loss(model_outputs, batch_actions)
+			v_loss_val = loss(sig(model_outputs), batch_actions)
 
 			print('[%5d]  t_loss = %f   v_loss = %f'%(t, t_loss_val,v_loss_val))
 			if log is not None:
