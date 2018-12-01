@@ -46,7 +46,7 @@ def auto_early_stopping(iteration, accuracy, model):
 			degrading_periods = degrading_periods + 1
 			accuracy_plateaued = True
 			print('Warning! Validation loss %f'%period_accuracy, ' is higher than all-time low %f'%prev_period_accuracy)
-			if degrading_periods > 3:
+			if degrading_periods > 1:
 				print('Recommend early stopping because the performance is worse than all-time low for 4 consective periods.')
 				return True, accuracy_plateaued, model_of_last_period
 		else:
