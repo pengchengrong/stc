@@ -166,6 +166,12 @@ while not terminated:
 		while not (terminated == True or restart == True or finish_time > 0):
 			action = 128 * fire + 16 * nitro + 8 * brake + 4 * fwd + 2 * right + 1 * left
 			if action == 0 or restart:
+
+				if prev_state is not None:
+					position = prev_state["position_along_track"] - int(prev_state["position_along_track"])
+					if (position > .80 and position < .86) or position > .93:
+						prediction |= 16
+
 				#Using model to play
 				if human_control == True:
 					# The human player just released control
@@ -248,7 +254,7 @@ while not terminated:
 			label = None
 			states = None
 
-torch.save(model.state_dict(), os.path.join(dirname, 'model.th')) 
+#torch.save(model.state_dict(), os.path.join(dirname, 'model.th')) 
 
 '''
 if data_aggregation == True:
