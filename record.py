@@ -169,7 +169,7 @@ while not terminated:
 
 				if prev_state is not None:
 					position = prev_state["position_along_track"] - int(prev_state["position_along_track"])
-					if (position > .80 and position < .86) or position > .93:
+					if (position > .79 and position < .82) or (position > .83 and position < .86) or position > .93:
 						prediction |= 16
 
 				#Using model to play
