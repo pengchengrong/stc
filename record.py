@@ -26,7 +26,7 @@ try:
 except:
 	pass
 
-
+last = time.time()
 folder_name = None
 terminated = False
 restart = False
@@ -229,6 +229,25 @@ while not terminated:
 				#img = img.view(1, 1, img.size()[0], img.size()[1], img.size()[2])
 				logits = policy(img.permute(2,1,0), extract_state(state))
 				prediction = get_action(logits)
+
+				if prev_state is not None and state is not None and state['position_along_track'] - prev_state['position_along_track'] < 0.000005:
+					count = count + 1
+				else:
+					count = 0
+
+				if count > 4 and time.time() - last > 3:
+					last = time.time()
+					count = 0	
+					action = 64
+					feedback = K.step(action)
+					state = feedback[0]
+					obs = feedback[1]
+					finish_time = state["finish_time"]
+					
+					img = torch.as_tensor(obs).float()
+					#img = img.view(1, 1, img.size()[0], img.size()[1], img.size()[2])
+					logits = policy(img.permute(2,1,0), extract_state(state))
+					prediction = get_action(logits)
 
 				prev_state = state
 				prev_obs = obs
