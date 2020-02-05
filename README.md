@@ -1,3 +1,3 @@
 # supertuxkart
 # Playing SuperTuxKart using an artificial neural network.
-# Techniques used includs attention machanism and DAGGER (data aggregation).
+# Techniques used includes CNN, attention mechanism, and DAGGER (data aggregation).
